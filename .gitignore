@@ -1,0 +1,16 @@
+.idea/
+__pycache__/
+tags
+*.pyc
+access.log
+uwsgi_dev.conf
+*.xls
+*.xlsx
+.mypy_cache
+tmp/
+uwsgi.log
+*.log
+.csv
+.txt
+.qiniu_pythonsdk_hostscache.json
+head_url/
