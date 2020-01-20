@@ -9,10 +9,11 @@ import tornado.web
 from configs import err_conf
 from configs.not_need_xyy import not_need_xyy
 from utils import check_sign, common
-from utils.log import ApiGrayUserlog_tornado, ApiGraylog
+from utils.log import ApiGrayUserlog_tornado, ApiGraylog, send_try_except
 
 
 class BaseHandler(tornado.web.RequestHandler):
+
     def prepare(self):
         """
         请求前的操作
@@ -62,17 +63,19 @@ class BaseHandler(tornado.web.RequestHandler):
         请求结果finish
         """
         if chunk is None and code is None:
-            chunk = dict(code="-102", msg="内部异常")
-        if chunk is None and code is not None:
-            chunk = dict(code=0, msg='ok')
-        if 'code' not in chunk:
-            chunk.update(code=0)
-        if 'msg' not in chunk:
-            chunk.update(msg='ok')
-        if code:
-            chunk.update(code=code)
-        if msg:
-            chunk.update(msg=msg)
+            chunk = dict(code=-102, msg="内部异常")
+            # 上报异常
+            send_try_except(self.request)
+
+        if isinstance(chunk, dict):
+            if 'code' not in chunk:
+                chunk.update(code=0)
+            if 'msg' not in chunk:
+                chunk.update(msg='ok')
+            if code:
+                chunk.update(code=code)
+            if msg:
+                chunk.update(msg=msg)
         self.response = chunk
         # 日志上报
         self.send_to_gray_log()
@@ -120,12 +123,6 @@ class BaseHandler(tornado.web.RequestHandler):
             if key not in args.keys():
                 return common.BadParam(key)
         return None
-
-    def safe_escape_char(self, text):
-        bad_char = [['\\n', '\n'], ['\\r', '\r'], ['\\"', '\"'], ["\\'", "\'"]]
-        for item in bad_char:
-            text = text.replace(item[0], item[1])
-        return text
 
 
 if __name__ == '__main__':
