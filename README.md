@@ -52,7 +52,7 @@
 
 使用 beanstalk + kafka，需要先在 `config.py` 中配置队列服务
 
-### 七牛存储
+#### 七牛存储
 
 一般用户头像、用户上传文件需要使用七牛 CDN 存储服务。使用时同样需要在` config.py` 中配置相关 key。
 
@@ -66,9 +66,9 @@
 2.签名在线验证工具：<http://open.qq.com/tools>
 3.签名值不需要进行encode编码
 
-### 日志系统
+#### 日志系统
 
-需要先搭建 GrayLog + mongodb + Elasticsearch。
+需要先搭建 GrayLog + Mongodb + Elasticsearch。
 
 当然也可以使用 ELK 系统。
 
