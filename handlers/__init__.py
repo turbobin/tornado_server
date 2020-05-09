@@ -107,13 +107,13 @@ class BaseHandler(tornado.web.RequestHandler):
                     for k, v in request_data_dict.items()
                 }
                 new_request_arguments = {
-                    k: common.my_str(v).decode('utf8')
+                    k: common.my_str(v)
                     for k, v in request_data_dict.items()
                 }
                 return new_request_arguments
         except Exception as e:
             raise tornado.web.HTTPError(
-                status_code=400, log_message='bad_request')
+                status_code=400, log_message='bad_request: {}'.format(str(e)))
 
     def check_must_have_param(self):
         args = self.request.arguments
